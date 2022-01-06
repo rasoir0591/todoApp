@@ -13,15 +13,15 @@ public class Project {
     @NotBlank(message = "Projects desc cannot be empty")
     private String description;
     @OneToMany(mappedBy = "project")
-    private Set<TaskGroup> taskGroups;
-    @OneToMany(cascade = {javax.persistence.CascadeType.ALL}, mappedBy = "project")
-    private Set<ProjectSteps> steps;
+    private Set<TaskGroup> groups;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    private Set<ProjectStep> steps;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -29,23 +29,23 @@ public class Project {
         return description;
     }
 
-    public void setDescription(String description) {
+     void setDescription(String description) {
         this.description = description;
     }
 
-    public Set<TaskGroup> getTaskGroups() {
-        return taskGroups;
+    Set<TaskGroup> getTaskGroups() {
+        return groups;
     }
 
-    public void setTaskGroups(Set<TaskGroup> taskGroups) {
-        this.taskGroups = taskGroups;
+     void setTaskGroups(Set<TaskGroup> taskGroups) {
+        this.groups = taskGroups;
     }
 
-    public Set<ProjectSteps> getSteps() {
+    public Set<ProjectStep> getSteps() {
         return steps;
     }
 
-    public void setSteps(Set<ProjectSteps> steps) {
+    void setSteps(Set<ProjectStep> steps) {
         this.steps = steps;
     }
 }

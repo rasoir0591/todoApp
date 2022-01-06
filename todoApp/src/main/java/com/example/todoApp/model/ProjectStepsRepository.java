@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectStepsRepository {
-  List<ProjectSteps> findAll();
+  List<ProjectStep> findAll();
 
-   Optional<ProjectSteps> findById(java.lang.Integer id);
+  Optional<ProjectStep> findById(java.lang.Integer id);
 
-  ProjectSteps save(ProjectSteps entity);
+  ProjectStep save(ProjectStep entity);
 }

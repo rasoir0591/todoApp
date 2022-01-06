@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "project_steps")
-public class ProjectSteps {
+public class ProjectStep {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private int id;
@@ -20,7 +20,7 @@ public class ProjectSteps {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -28,7 +28,7 @@ public class ProjectSteps {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
@@ -36,15 +36,15 @@ public class ProjectSteps {
         return daysToDeadline;
     }
 
-    public void setDaysToDeadline(int daysToDeadline) {
+    void setDaysToDeadline(int daysToDeadline) {
         this.daysToDeadline = daysToDeadline;
     }
 
-    public Project getProject() {
+    Project getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    void setProject(Project project) {
         this.project = project;
     }
 }
