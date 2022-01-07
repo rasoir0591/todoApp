@@ -39,7 +39,7 @@ public class TaskGroupService {
             throw new IllegalStateException("Group has undone tasks. Done all task first");
         }
         TaskGroup result = repository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+                .orElseThrow(() -> new IllegalArgumentException("TaskGroup with given id not found"));
         result.setDone(!result.isDone());
         repository.save(result);
     }

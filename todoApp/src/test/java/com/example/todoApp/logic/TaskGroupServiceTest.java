@@ -24,53 +24,61 @@ import static org.mockito.Mockito.when;
 class TaskGroupServiceTest {
     @Test
     @DisplayName("Should throw exception if group have undone tasks")
-    void toggleTaskGroup_undoneTasks_throwsIllegalStateException(){
+    void toggleTaskGroup_undoneTasks_throwsIllegalStateException() {
         //given
-        TaskGroupRepository mockGroupRepository = mock(TaskGroupRepository.class);
-        //and
-        TaskRepository mockTaskRepository = mock(TaskRepository.class);
-        //and
-        when(mockTaskRepository.existsByDoneIsFalseAndGroup_Id(anyInt())).thenReturn(true);
+        TaskRepository mockTaskRepository = taskRepositoryReturning(true);
         //system under test
-        var toTest = new TaskGroupService(mockGroupRepository, mockTaskRepository);
+        var toTest = new TaskGroupService(null, mockTaskRepository);
         //when
-        var exception = catchThrowable(()-> toTest.toggleGroup(0));
+        var exception = catchThrowable(() -> toTest.toggleGroup(1));
         //then
         assertThat(exception)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("has undone tasks");
     }
+
+    private TaskRepository taskRepositoryReturning(final boolean result) {
+        var mockTaskRepository = mock(TaskRepository.class);
+        when(mockTaskRepository.existsByDoneIsFalseAndGroup_Id(anyInt())).thenReturn(result);
+        return mockTaskRepository;
+    }
+
     @Test
-    @DisplayName("Should throw exception if no tasks for given")
-    void toggleTaskGroup_noTask_throwsIllegalStateException(){
+    @DisplayName("Should throw exception when no group")
+    void toggleTaskGroup_wrongID_throwsIllegalArgumentException() {
         //given
-        TaskGroupRepository mockGroupRepository = mock(TaskGroupRepository.class);
+        TaskRepository mockTaskRepository = taskRepositoryReturning(false);
         //and
-        TaskRepository mockTaskRepository = mock(TaskRepository.class);
+        var mockRepository = mock(TaskGroupRepository.class);
         //and
         when(mockTaskRepository.findById(anyInt())).thenReturn(Optional.empty());
         //system under test
-        var toTest = new TaskGroupService(mockGroupRepository, mockTaskRepository);
+        var toTest = new TaskGroupService(mockRepository, mockTaskRepository);
         //when
-        var exception = catchThrowable(()-> toTest.toggleGroup(0));
+        var exception = catchThrowable(() -> toTest.toggleGroup(1));
         //then
         assertThat(exception)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("");
+                .hasMessageContaining("id not found");
     }
+
     @Test
     @DisplayName("Should toggle state")
-    void createTaskGroup_allOk_toggleAndSave(){
-        var source = mock(GroupWriteModel.class);
+    void toggleGroup_worksAsExpected() {
         //given
-        TaskGroupRepository mockGroupRepository = mock(TaskGroupRepository.class);
+        TaskRepository mockTaskRepository = taskRepositoryReturning(false);
         //and
-        TaskRepository mockTaskRepository = mock(TaskRepository.class);
+        var group = new TaskGroup();
+        var beforeToggle = group.isDone();
+        //and
+        var mockRepository = mock(TaskGroupRepository.class);
+        when(mockRepository.findById(anyInt())).thenReturn(Optional.of(group));
         //system under test
-        var toTest = new TaskGroupService(mockGroupRepository, mockTaskRepository);
+        var toTest = new TaskGroupService(mockRepository, mockTaskRepository);
         //then
+        toTest.toggleGroup(0);
 
-
+        assertThat(group.isDone())
+                .isEqualTo(!beforeToggle);
     }
-
 }
